@@ -10,13 +10,13 @@ class MongoStockData:
 
     def connect_to_database(self):
         try:
-            self.client.server_info()  # 尝试获取数据库信息以检查连接是否成功
+            self.client.server_info()  # Try to access the database information to check whether the connection was successful
             return True
         except pymongo.errors.ServerSelectionTimeoutError:
             return False
 
     def get_stock_data(self, symbol, start_date, end_date):
-        # 查询某只股票某段时间的行情
+        # Check the price of a stock for a certain period of time
         query = {
             "ts_code": symbol,
             "trade_date": {
@@ -32,7 +32,7 @@ class MongoStockData:
             return None
 
     def get_all_stocks_dates(self):
-        # 获取所有股票的起始日期和最新日期
+        # Access the start date and latest date for all stocks
         pipeline = [
             {
                 "$group": {
@@ -47,7 +47,7 @@ class MongoStockData:
         return pd.DataFrame(data)
 
     def get_adjust_factor_data(self):
-        # 获取每只股票的当日价格、当日复权因子和最新复权因子
+        # Access the day's price, day's weight factor, and latest weight factor for each stock
         pipeline = [
             {
                 "$group": {
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     if mongo.connect_to_database():
         print("Successfully connected to MongoDB.")
         
-        # 2) 获取某只股票某段时间的行情
+        # 2) Access the price of a stock for a certain period of time
         symbol = "YOUR_STOCK_SYMBOL"
         start_date = "20220101"
         end_date = "20220131"
@@ -85,11 +85,11 @@ if __name__ == "__main__":
         else:
             print(f"No data found for {symbol} in the specified date range.")
         
-        # 3) 获取全体数据库中所有股票的起始日期和最新日期
+        # 3) Access the start and latest dates for all stocks in the entire database
         all_stock_dates = mongo.get_all_stocks_dates()
         mongo.export_to_csv(all_stock_dates, "all_stocks_dates.csv")
         
-        # 4) 获取每只股票的adjust factor数据
+        # 4) Access adjust factor data for each stock
         adjust_factor_data = mongo.get_adjust_factor_data()
         mongo.export_to_csv(adjust_factor_data, "adjust_factor_data.csv")
         
