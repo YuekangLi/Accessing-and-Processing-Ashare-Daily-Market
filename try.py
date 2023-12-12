@@ -10,7 +10,7 @@ class MongoStockData:
 
     def connect_to_database(self):
         try:
-            self.client.server_info()  # Try to access the database information to check whether the connection was successful
+            self.client.server_info()  # 1) Try to access the database information to check whether the connection is successful
             return True
         except pymongo.errors.ServerSelectionTimeoutError:
             return False
@@ -70,7 +70,7 @@ class MongoStockData:
         self.client.close()
 
 if __name__ == "__main__":
-    mongo = MongoStockData("jztxtech.tpddns.cn", 27011, "reader", "Aa123456", "AShare", "daily")
+    mongo = MongoStockData("Hostname", Port, "Username", "Password", "Database", "Connection")
     if mongo.connect_to_database():
         print("Successfully connected to MongoDB.")
         
